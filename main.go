@@ -2,35 +2,35 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+
+	"gomatrics/router"
 )
 
-type Post struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
-}
-
 var db *sql.DB
-var err error
 
 func main() {
+	var err error
+
 	db, err = sql.Open("mysql", "test:test@tcp(127.0.0.1:3306)/gomatric")
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
-
 	defer db.Close()
-	router := mux.NewRouter()
 
-	// === Posts Router === //
-	router.HandleFunc("/posts", getPosts).Methods("GET")
-	router.HandleFunc("/posts", createPost).Methods("POST")
-	router.HandleFunc("/posts/{id}", getPost).Methods("GET")
-	router.HandleFunc("/posts/{id}", updatePost).Methods("PUT")
-	router.HandleFunc("/posts/{id}", deletePost).Methods("DELETE")
+	// Give DB to router package
+	router.DB = db
 
-	http.ListenAndServe(":8000", router)
+	r := mux.NewRouter()
+
+	// Register routes
+	router.RegisterPostRoutes(r)
+
+	fmt.Println("Server running on :8000")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
