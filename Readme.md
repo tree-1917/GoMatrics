@@ -74,7 +74,7 @@ curl http://localhost:8000/posts
 GoAccess is an open-source **real-time web log analyzer** and interactive viewer that runs in a terminal on *nix systems or through your browser.
 It provides fast and valuable HTTP statistics for system administrators who require a visual server report on the fly.
 
-> ![goaccess](https://goaccess.io/)
+> [goaccess](https://goaccess.io/)
 
 ### How to use with GoMatrics
 
